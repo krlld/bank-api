@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  discovery:
+    build: ./discovery
+    container_name: discovery
+    ports:
+      - "8761:8761"
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=discovery
+      - EUREKA_INSTANCE_PORT=8761
+      - TRANSACTION_SERVICE_HOST=transaction-service
+      - TRANSACTION_SERVICE_PORT=8090
+    ports:
+      - "8080:8080"
+
+  transaction-service:
+    build: ./transaction-service
+    container_name: transaction-service
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=discovery
+      - EUREKA_INSTANCE_PORT=8761
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://transaction-db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    depends_on:
+      - transaction-db
+      - discovery
+      - gateway
+    ports:
+      - "8090:8090"
+
+  transaction-db:
+    image: postgres:15-alpine
+    container_name: transaction-db
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

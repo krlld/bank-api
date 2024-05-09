@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: transaction-service
+          uri: http://${TRANSACTION_SERVICE_HOST}:${TRANSACTION_SERVICE_PORT}
+          predicates:
+            - Path=/api/v1/transactions/**
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://${EUREKA_INSTANCE_HOSTNAME}:${EUREKA_INSTANCE_PORT}/eureka/
