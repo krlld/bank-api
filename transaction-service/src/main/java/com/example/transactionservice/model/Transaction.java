@@ -1,4 +1,4 @@
-package com.example.transactionservice;
+package com.example.transactionservice.model;
 
 import com.example.commonlib.entity.AbstractEntity;
 import javax.persistence.Entity;
