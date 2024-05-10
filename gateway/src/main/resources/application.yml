@@ -7,16 +7,17 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: transaction-service
-          uri: http://${TRANSACTIONS_SERVICE_HOST}:${TRANSACTIONS_SERVICE_PORT}
+        - id: transactions-service
+          uri: lb://transactions-service
           predicates:
             - Path=/api/v1/transactions/**
         - id: accounts-service
-          uri: http://${ACCOUNTS_SERVICE_HOST}:${ACCOUNTS_SERVICE_PORT}
+          uri: lb://accounts-service
           predicates:
             - Path=/api/v1/accounts/**
 eureka:
   client:
     register-with-eureka: false
+    fetchRegistry: true
     service-url:
       defaultZone: http://${EUREKA_INSTANCE_HOSTNAME}:${EUREKA_INSTANCE_PORT}/eureka/
