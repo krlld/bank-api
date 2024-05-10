@@ -13,30 +13,30 @@ services:
     environment:
       - EUREKA_INSTANCE_HOSTNAME=discovery
       - EUREKA_INSTANCE_PORT=8761
-      - TRANSACTION_SERVICE_HOST=transaction-service
+      - TRANSACTION_SERVICE_HOST=transactions-service
       - TRANSACTION_SERVICE_PORT=8090
     ports:
       - "8080:8080"
 
-  transaction-service:
-    build: ./transaction-service
-    container_name: transaction-service
+  transactions-service:
+    build: ./transactions-service
+    container_name: transactions-service
     environment:
       - EUREKA_INSTANCE_HOSTNAME=discovery
       - EUREKA_INSTANCE_PORT=8761
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://transaction-db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://transactions-db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
     depends_on:
-      - transaction-db
+      - transactions-db
       - discovery
       - gateway
     ports:
       - "8090:8090"
 
-  transaction-db:
+  transactions-db:
     image: postgres:15-alpine
-    container_name: transaction-db
+    container_name: transactions-db
     restart: always
     ports:
       - "5433:5432"
