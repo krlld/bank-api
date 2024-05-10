@@ -13,8 +13,10 @@ services:
     environment:
       - EUREKA_INSTANCE_HOSTNAME=discovery
       - EUREKA_INSTANCE_PORT=8761
-      - TRANSACTION_SERVICE_HOST=transactions-service
-      - TRANSACTION_SERVICE_PORT=8090
+      - TRANSACTIONS_SERVICE_HOST=transactions-service
+      - TRANSACTIONS_SERVICE_PORT=8090
+      - ACCOUNTS_SERVICE_HOST=accounts-service
+      - ACCOUNTS_SERVICE_PORT=8050
     ports:
       - "8080:8080"
 
@@ -40,6 +42,35 @@ services:
     restart: always
     ports:
       - "5433:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  accounts-service:
+    build: ./accounts-service
+    container_name: accounts-service
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=discovery
+      - EUREKA_INSTANCE_PORT=8761
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://accounts-db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    depends_on:
+      - accounts-db
+      - discovery
+      - gateway
+    ports:
+      - "8050:8050"
+
+  accounts-db:
+    image: postgres:15-alpine
+    container_name: accounts-db
+    restart: always
+    ports:
+      - "5434:5432"
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=1234

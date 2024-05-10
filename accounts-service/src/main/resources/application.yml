@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: accounts-service
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    password: ${SPRING_DATASOURCE_PASSWORD}
+server:
+  port: 8050
+  servlet:
+    context-path: /api/v1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_INSTANCE_HOSTNAME}:${EUREKA_INSTANCE_PORT}/eureka/

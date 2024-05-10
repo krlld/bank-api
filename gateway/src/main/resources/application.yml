@@ -8,9 +8,13 @@ spring:
           enabled: true
       routes:
         - id: transaction-service
-          uri: http://${TRANSACTION_SERVICE_HOST}:${TRANSACTION_SERVICE_PORT}
+          uri: http://${TRANSACTIONS_SERVICE_HOST}:${TRANSACTIONS_SERVICE_PORT}
           predicates:
             - Path=/api/v1/transactions/**
+        - id: accounts-service
+          uri: http://${ACCOUNTS_SERVICE_HOST}:${ACCOUNTS_SERVICE_PORT}
+          predicates:
+            - Path=/api/v1/accounts/**
 eureka:
   client:
     register-with-eureka: false
